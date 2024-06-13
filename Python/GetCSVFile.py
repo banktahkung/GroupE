@@ -93,7 +93,7 @@ class FileAttribute:
 
     # Open the given file (in excel format)
     @staticmethod
-    def OpenTheCSVFile(filename: str):
+    def OpenTheFile(filename: str):
         """
         Open the given file name (if the given file name doesn't contain the extension then append it with ".csv" or ".xlsx")
 
@@ -185,17 +185,20 @@ class FileAttribute:
 
                 # Write the data as the decoded data to the temporary csv file
                 with open(OriginFileName + "_temp.csv", "wb") as temp_file:
-                    temp_file.write(DecodedData)
-
-                # Read the data
+                    temp_file.write(DecodedData)          
+                
                 df = pd.read_csv(OriginFileName + "_temp.csv")
+                
 
                 # Remove the temporary file
                 os.remove(OriginFileName + "_temp.csv")
 
             # If not hash, then read it as csv
             else:
-                df = pd.read_csv(OriginFileName)
+                if (".csv" in OriginFileName):
+                    df = pd.read_csv(OriginFileName)
+                elif (".xlsx" in OriginFileName):
+                    df = pd.read_excel(OriginFileName)
 
             return df
 
@@ -256,10 +259,10 @@ if __name__ == "__main__":
     Checking.CheckingTheModule(module_list=modules_to_install)
 
     # Replace the parameter with your "filename" (you may include the extension)
-    FILE_UNIVERSAL = FileAttribute.OpenTheCSVFile("data")
+    FILE_UNIVERSAL = FileAttribute.OpenTheFile("YOUR_FILE_GOES_IN_THIS_PARAMETER")
 
     # Select the forth row of the csv file
-    Row_selected_File_Universal = FILE_UNIVERSAL.iloc[[4]]
+    Row_selected_File_Universal = FILE_UNIVERSAL.iloc[[0]]
     print(Row_selected_File_Universal)
 
     # Add the column "Original_File_Name" and "Row_Index"
@@ -270,7 +273,7 @@ if __name__ == "__main__":
     FileAttribute.SaveTheFile("prototype", "xlsx", Row_selected_File_Universal)
 
     # Open the file
-    FILE_UNIVERSAL = FileAttribute.OpenTheCSVFile("prototype.csv")
+    FILE_UNIVERSAL = FileAttribute.OpenTheFile("prototype.csv")
 
     # Get the last 5 columns of the file
     last_column = FILE_UNIVERSAL.columns[-5:-1]

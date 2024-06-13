@@ -104,6 +104,68 @@ class FileAttribute:
         - pd.DataFrame :  return the content of the given file. if the file doesn't existed, return "None"
         """
 
+        # Find the closest file name in the same folder
+        def MostFileFounder(filename:str):
+
+            """
+            Find the closest file name in the same folder based on Levenshtein distance.
+
+            Parameters:
+            - filename (str): Filename to find closest match for.
+
+            Returns:
+            - str: Closest filename(s) separated by comma.
+            """
+
+            def levenshtein_distance(s1, s2):
+                """
+                Compute Levenshtein distance between two strings.
+
+                Parameters:
+                - s1 (str): First string.
+                - s2 (str): Second string.
+
+                Returns:
+                - int: Levenshtein distance between s1 and s2.
+                """
+
+                if len(s1) > len(s2):
+                    s1, s2 = s2, s1
+
+                distances = range(len(s1) + 1)
+
+                for i2, c2 in enumerate(s2):
+                    distances_ = [i2 + 1]
+                    for i1, c1 in enumerate(s1):
+                        if c1 == c2:
+                            distances_.append(distances[i1])
+                        else:
+                            distances_.append(1 + min((distances[i1], distances[i1 + 1], distances_[-1])))
+                    distances = distances_
+
+                return distances[-1]
+
+            folder_path = os.path.dirname(filename)
+            file_name = os.path.basename(filename)
+
+            print(folder_path)
+
+            closest_filenames = []
+            closest_distance = float('inf')
+
+            for file in os.listdir(folder_path):
+                if file != file_name:
+                    distance = levenshtein_distance(file_name, file)
+
+                    if distance < closest_distance:
+                        closest_filenames = [file]
+                        closest_distance = distance
+                    elif distance == closest_distance:
+                        closest_filenames.append(file)
+
+            return ', '.join(closest_filenames)
+
+
         # Checking whether the current folder contain the "Inventory folder"
         Checking.CheckingTheDefaultEnvironment("Inventory")
 
@@ -139,11 +201,11 @@ class FileAttribute:
 
         else:
             raise FileNotFoundError(
-                f"File {filename} not found. Did you import it yet? \nSearching Path : {OriginFileName}")
+                f"File {filename} not found. Did you import it yet? \nSearching Path : {OriginFileName} \n Do you mean : {MostFileFounder(filename=OriginFileName)}")
 
     # Save the Excel file
     @staticmethod
-    def SaveTheFile(filename: str = "test", format: str = "csv", Information: pd.DataFrame = None, hash: bool = False):
+    def SaveTheFile(filename: str = "test" , format: str = "csv", Information: pd.DataFrame = None, hash: bool = False):
         """
         Save the given information to a file in the specified format.
 
@@ -157,63 +219,30 @@ class FileAttribute:
 
         # If the given information is not None
         if Information is not None:
+            TempFileName = os.path.join(CURRENT_PATH, DOCUMENT_FOLDER, filename + f"_temp.{format.lower()}")
 
-            # Save the file in "csv" format
-            if ("csv" in format.lower()):
-
-                # Save the information to the temporary "csv" file
-                TempFileName = f"Inventory/{filename}_temp.csv"
+            # Export the information as the given extension
+            if format.lower() == 'csv':
                 Information.to_csv(TempFileName, index=False)
 
-                if hash:
-
-                    # Open the temporary file and retrieve the data to perform hash
-                    with open(TempFileName, "rb") as file:
-                        data = file.read()
-
-                    # Encoded the data
-                    encoded_data = HEADER + base64.b64encode(data)
-
-                    # Write the encoded data to the "filename".csv
-                    with open(f"Inventory/{filename}.csv", "wb") as file:
-                        file.write(encoded_data)
-
-                    # Remove the temporary file
-                    os.remove(TempFileName)
-                else:
-
-                    # Rename the file if the hash value is "False"
-                    os.rename(TempFileName, f"Inventory/{filename}.csv")
-
-            # Save the file in "xlsx" format
-            elif ("xlsx" in format.lower()):
-
-                # Save the information to the temporary "xlsx" file
-                TempFileName = f"Inventory/{filename}_temp.xlsx"
+            elif format.lower() == 'xlsx':
                 Information.to_excel(TempFileName, index=False)
 
-                if hash:
+            # If hash is True, then perform hash to the information
+            if hash:
+                with open(TempFileName, "rb") as file:
+                    data = file.read()
+                encoded_data = HEADER + base64.b64encode(data)
+                
+                # Create the file and rewrite it with the encoded data
+                with open(os.path.join(CURRENT_PATH, DOCUMENT_FOLDER, filename + f".{format.lower()}"), "wb") as file:
+                    file.write(encoded_data)
 
-                    # Open the temporary file and retrieve the data to perform hash
-                    with open(TempFileName, "rb") as file:
-                        data = file.read()
-
-                    # Encoded the data
-                    encoded_data = HEADER + base64.b64encode(data)
-
-                    # Write the encoded data to the "filename".csv
-                    with open(f"Inventory/{filename}.xlsx", "wb") as file:
-                        file.write(encoded_data)
-
-                    # Remove the temporary file
-                    os.remove(TempFileName)
-                else:
-
-                    # Rename the file if the hash value is "False"
-                    os.rename(TempFileName, f"Inventory/{filename}.xlsx")
-
+                os.remove(TempFileName)
+            else:
+                os.rename(TempFileName, os.path.join(CURRENT_PATH, DOCUMENT_FOLDER, filename + f".{format.lower()}"))
         else:
-            raise ValueError("The given information can't be empty")
+            raise ValueError("The given information cannot be empty")
 
 
 # Run this script if want to test this script
@@ -222,8 +251,12 @@ if __name__ == "__main__":
 
     Checking.CheckingTheModule("pandas")
 
+    # Modules to check/install
+    modules_to_install = ["pandas", "openpyxl"]
+    Checking.CheckingTheModule(module_list=modules_to_install)
+
     # Replace the parameter with your "filename" (you may include the extension)
-    FILE_UNIVERSAL = FileAttribute.OpenTheCSVFile("YOUR_TEST_CSV_OR_XLSX_GOES_HERE")
+    FILE_UNIVERSAL = FileAttribute.OpenTheCSVFile("data")
 
     # Select the forth row of the csv file
     Row_selected_File_Universal = FILE_UNIVERSAL.iloc[[4]]
@@ -234,7 +267,7 @@ if __name__ == "__main__":
     Row_selected_File_Universal['Row_Index'] = 5
 
     # Save the file
-    FileAttribute.SaveTheFile("prototype", "csv", Row_selected_File_Universal)
+    FileAttribute.SaveTheFile("prototype", "xlsx", Row_selected_File_Universal)
 
     # Open the file
     FILE_UNIVERSAL = FileAttribute.OpenTheCSVFile("prototype.csv")

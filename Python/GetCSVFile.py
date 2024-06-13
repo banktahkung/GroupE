@@ -1,14 +1,18 @@
 import pandas as pd
-import os 
+import os
 import base64
+import subprocess
+import importlib.util
+import sys
 
 HEADER = b'HASHEDFILE'
-    
+
+
 class Checking:
 
     # Add the folder "Inventory" if it is not existed
     @staticmethod
-    def CheckingTheDefaultEnvironment(path:str):
+    def CheckingTheDefaultEnvironment(path: str):
         """
         Checking whether the current path contain the folder "path" to store the file or not.
         If not, create the "path" folder to store the information
@@ -18,12 +22,18 @@ class Checking:
 
         """
 
+        global CURRENT_PATH, DOCUMENT_FOLDER
+
         if not (os.path.exists(path)):
             os.makedirs(path)
-    
+
+        # Get the current path of this file
+        CURRENT_PATH = os.path.dirname(os.path.abspath(__file__))
+        DOCUMENT_FOLDER = path
+
     # Checking the extension of the "existed file":
     @staticmethod
-    def CheckingTheFileExtension(filename:str):
+    def CheckingTheFileExtension(filename: str):
         """
         Check if the given filename includes an extension. If not, append the filename with ".csv" or ".xlsx" and check if the file exists.
         If found, return the filename with the path. If not found, return the original filename.
@@ -35,8 +45,10 @@ class Checking:
         - str: The complete file name with extension if it exists, or the original file name with the path.
         """
 
+        global CURRENT_PATH, DOCUMENT_FOLDER
+
         # Build up the path to the file
-        PathFileName = f"Inventory/{filename}"
+        PathFileName = os.path.join(CURRENT_PATH, DOCUMENT_FOLDER, filename)
 
         # If the extension is not include in the given filename
         if (".csv" not in filename or ".xlsx" not in filename):
@@ -51,12 +63,37 @@ class Checking:
 
         return PathFileName
 
+    # Checking whether the python module is already install or not
+    def CheckingTheModule(module_str: str = None, module_list: list = []):
+        """
+            Checking if the given module is already included in the environment or not. If not then install.
+
+            Parameters:
+            - module_str (str): The module name that need to be check and install if have not installed yet
+            - module_list (list) : The list of module name that need to be check and install if have not installed yet (Default : [] (empty list))
+        """
+
+        # Install and import the module if the module isn't already installed yet
+        def install_and_import(package):
+            spec = importlib.util.find_spec(package)
+            if spec is None:
+                subprocess.check_call([sys.executable, '-m', 'pip', 'install', package])
+            globals()[package] = importlib.import_module(package)
+        
+        # If the input moudle_str is not None (No input)
+        if module_str is not None:
+            install_and_import(module_str)
+        
+        # Install the module from the list
+        for module in module_list:
+            install_and_import(module)
+
 
 class FileAttribute:
 
     # Open the given file (in excel format)
     @staticmethod
-    def OpenTheCSVFile(filename:str):
+    def OpenTheCSVFile(filename: str):
         """
         Open the given file name (if the given file name doesn't contain the extension then append it with ".csv" or ".xlsx")
 
@@ -74,7 +111,7 @@ class FileAttribute:
 
         # If the file exist, then import it
         if (os.path.isfile(OriginFileName)):
-            
+
             # Open the file
             with open(OriginFileName, "rb") as file:
                 data = file.read()
@@ -101,11 +138,12 @@ class FileAttribute:
             return df
 
         else:
-            raise FileNotFoundError(f"File {filename} not found. Did you import it yet? \nSearching Path : {OriginFileName}")
+            raise FileNotFoundError(
+                f"File {filename} not found. Did you import it yet? \nSearching Path : {OriginFileName}")
 
     # Save the Excel file
     @staticmethod
-    def SaveTheFile(filename:str = "test", format:str = "csv", Information:pd.DataFrame = None, hash:bool = False):
+    def SaveTheFile(filename: str = "test", format: str = "csv", Information: pd.DataFrame = None, hash: bool = False):
         """
         Save the given information to a file in the specified format.
 
@@ -117,7 +155,8 @@ class FileAttribute:
 
         """
 
-        if Information:
+        # If the given information is not None
+        if Information is not None:
 
             # Save the file in "csv" format
             if ("csv" in format.lower()):
@@ -146,7 +185,6 @@ class FileAttribute:
                     # Rename the file if the hash value is "False"
                     os.rename(TempFileName, f"Inventory/{filename}.csv")
 
-            
             # Save the file in "xlsx" format
             elif ("xlsx" in format.lower()):
 
@@ -173,16 +211,19 @@ class FileAttribute:
 
                     # Rename the file if the hash value is "False"
                     os.rename(TempFileName, f"Inventory/{filename}.xlsx")
-        
+
         else:
             raise ValueError("The given information can't be empty")
 
+
 # Run this script if want to test this script
-if __name__ == "__main__" :
+if __name__ == "__main__":
     print("Running the GET CSV FILE script")
 
-    # Replace the "database101.csv" with your filename (you may include the extension)
-    FILE_UNIVERSAL = FileAttribute.OpenTheCSVFile("a.csv")
+    Checking.CheckingTheModule("pandas")
+
+    # Replace the parameter with your "filename" (you may include the extension)
+    FILE_UNIVERSAL = FileAttribute.OpenTheCSVFile("YOUR_TEST_CSV_OR_XLSX_GOES_HERE")
 
     # Select the forth row of the csv file
     Row_selected_File_Universal = FILE_UNIVERSAL.iloc[[4]]
@@ -193,7 +234,7 @@ if __name__ == "__main__" :
     Row_selected_File_Universal['Row_Index'] = 5
 
     # Save the file
-    FileAttribute.SaveTheFile(filename="prototype", format="csv", hash=True)
+    FileAttribute.SaveTheFile("prototype", "csv", Row_selected_File_Universal)
 
     # Open the file
     FILE_UNIVERSAL = FileAttribute.OpenTheCSVFile("prototype.csv")

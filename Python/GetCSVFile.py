@@ -77,13 +77,14 @@ class Checking:
         def install_and_import(package):
             spec = importlib.util.find_spec(package)
             if spec is None:
-                subprocess.check_call([sys.executable, '-m', 'pip', 'install', package])
+                subprocess.check_call(
+                    [sys.executable, '-m', 'pip', 'install', package])
             globals()[package] = importlib.import_module(package)
-        
+
         # If the input moudle_str is not None (No input)
         if module_str is not None:
             install_and_import(module_str)
-        
+
         # Install the module from the list
         for module in module_list:
             install_and_import(module)
@@ -105,8 +106,7 @@ class FileAttribute:
         """
 
         # Find the closest file name in the same folder
-        def MostFileFounder(filename:str):
-
+        def MostFileFounder(filename: str):
             """
             Find the closest file name in the same folder based on Levenshtein distance.
 
@@ -140,7 +140,8 @@ class FileAttribute:
                         if c1 == c2:
                             distances_.append(distances[i1])
                         else:
-                            distances_.append(1 + min((distances[i1], distances[i1 + 1], distances_[-1])))
+                            distances_.append(
+                                1 + min((distances[i1], distances[i1 + 1], distances_[-1])))
                     distances = distances_
 
                 return distances[-1]
@@ -165,7 +166,6 @@ class FileAttribute:
 
             return ', '.join(closest_filenames)
 
-
         # Checking whether the current folder contain the "Inventory folder"
         Checking.CheckingTheDefaultEnvironment("Inventory")
 
@@ -183,15 +183,24 @@ class FileAttribute:
             if data.startswith(HEADER):
                 DecodedData = base64.b64decode(data[len(HEADER):])
 
+                # Get the extension of the original file name
+                if (".csv" in OriginFileName):
+                    format = ".csv"
+                elif (".xlsx" in OriginFileName):
+                    format = ".xlsx"
+
                 # Write the data as the decoded data to the temporary csv file
-                with open(OriginFileName + "_temp.csv", "wb") as temp_file:
-                    temp_file.write(DecodedData)          
-                
-                df = pd.read_csv(OriginFileName + "_temp.csv")
-                
+                with open(OriginFileName + f"_temp{format}", "wb") as temp_file:
+                    temp_file.write(DecodedData)
+
+                # Read the file
+                if (format == ".csv"):
+                    df = pd.read_csv(OriginFileName + f"_temp{format}")
+                elif (format == ".xlsx"):
+                    df = pd.read_excel(OriginFileName + f"_temp{format}")
 
                 # Remove the temporary file
-                os.remove(OriginFileName + "_temp.csv")
+                os.remove(OriginFileName + f"_temp{format}")
 
             # If not hash, then read it as csv
             else:
@@ -208,7 +217,7 @@ class FileAttribute:
 
     # Save the Excel file
     @staticmethod
-    def SaveTheFile(filename: str = "test" , format: str = "csv", Information: pd.DataFrame = None, hash: bool = False):
+    def SaveTheFile(filename: str = "test", format: str = "csv", Information: pd.DataFrame = None, hash: bool = False):
         """
         Save the given information to a file in the specified format.
 
@@ -222,7 +231,8 @@ class FileAttribute:
 
         # If the given information is not None
         if Information is not None:
-            TempFileName = os.path.join(CURRENT_PATH, DOCUMENT_FOLDER, filename + f"_temp.{format.lower()}")
+            TempFileName = os.path.join(
+                CURRENT_PATH, DOCUMENT_FOLDER, filename + f"_temp.{format.lower()}")
 
             # Export the information as the given extension
             if format.lower() == 'csv':
@@ -236,14 +246,15 @@ class FileAttribute:
                 with open(TempFileName, "rb") as file:
                     data = file.read()
                 encoded_data = HEADER + base64.b64encode(data)
-                
+
                 # Create the file and rewrite it with the encoded data
                 with open(os.path.join(CURRENT_PATH, DOCUMENT_FOLDER, filename + f".{format.lower()}"), "wb") as file:
                     file.write(encoded_data)
 
                 os.remove(TempFileName)
             else:
-                os.rename(TempFileName, os.path.join(CURRENT_PATH, DOCUMENT_FOLDER, filename + f".{format.lower()}"))
+                os.rename(TempFileName, os.path.join(CURRENT_PATH,
+                          DOCUMENT_FOLDER, filename + f".{format.lower()}"))
         else:
             raise ValueError("The given information cannot be empty")
 
@@ -259,7 +270,7 @@ if __name__ == "__main__":
     Checking.CheckingTheModule(module_list=modules_to_install)
 
     # Replace the parameter with your "filename" (you may include the extension)
-    FILE_UNIVERSAL = FileAttribute.OpenTheFile("YOUR_FILE_GOES_IN_THIS_PARAMETER")
+    FILE_UNIVERSAL = FileAttribute.OpenTheFile("database101.csv")
 
     # Select the forth row of the csv file
     Row_selected_File_Universal = FILE_UNIVERSAL.iloc[[0]]
@@ -270,10 +281,11 @@ if __name__ == "__main__":
     Row_selected_File_Universal['Row_Index'] = 5
 
     # Save the file
-    FileAttribute.SaveTheFile("prototype", "xlsx", Row_selected_File_Universal)
+    FileAttribute.SaveTheFile(
+        "prototype", "xlsx", Row_selected_File_Universal, True)
 
     # Open the file
-    FILE_UNIVERSAL = FileAttribute.OpenTheFile("prototype.csv")
+    FILE_UNIVERSAL = FileAttribute.OpenTheFile("prototype.xlsx")
 
     # Get the last 5 columns of the file
     last_column = FILE_UNIVERSAL.columns[-5:-1]

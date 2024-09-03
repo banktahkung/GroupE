@@ -23,12 +23,50 @@ if __name__ == "__main__":
     # The main program start here
     while (True):
 
-        # Get the input file name
-        FileName = str(input("Input the file name the display (you may include the file extension)): "))
+        # Get the command to manipulate the file
+        Command = str(input("Input the command (\"Open\" or \"Save\"): "))
 
-        if (FileName == "end"):
+        # If the command is "Open", openning the file name
+        if Command.lower() == "open":
+
+            # Get the input file name
+            FileName = str(input("Input the file name to display (you may include the file extension): "))
+
+            if FileName.lower() == "end":
+                break
+
+            # Openning the file
+            FILE = gcv.FileAttribute.OpenTheFile(FileName)
+
+            print(FILE) # Display the information of the file
+
+        elif Command.lower() == "save":
+
+            # Input the file that want to be openned
+            FileName = str(input("Input the file name to begin saving file (you may include the file extension): "))
+
+            if FileName.lower() == "end":
+                break
+
+
+            FILE = gcv.FileAttribute.OpenTheFile(FileName)
+
+            # Input the file name to save
+            SaveFile = str(input("Input the filename that you want to save : "))
+
+            SavingRow = str(input("Input the row that you want to be save"))
+
+            Format = str(input("Input the format that you want to save (.xlsx, .csv)"))
+
+            gcv.FileAttribute.SaveTheFile(SaveFile, "csv", FILE.iloc[[SavingRow]], False)
+
+            # Get the information for saving the file
+            print("Finish Saving File")
+
+        elif Command.lower() == "end":
             break
 
-        # Openning the file
-        gcv.FileAttribute.OpenTheCSVFile(FileName)
+        
+
+
         

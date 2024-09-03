@@ -10,7 +10,7 @@ HEADER = b'HASHEDFILE'
 
 class Checking:
 
-    # Add the folder "Inventory" if it is not existed
+    # Add the folder "path" if not exists
     @staticmethod
     def CheckingTheDefaultEnvironment(path: str):
         """
@@ -171,6 +171,8 @@ class FileAttribute:
 
         OriginFileName = Checking.CheckingTheFileExtension(filename=filename)
 
+        format = None
+
         # If the file exist, then import it
         if (os.path.isfile(OriginFileName)):
 
@@ -213,7 +215,7 @@ class FileAttribute:
 
         else:
             raise FileNotFoundError(
-                f"File {filename} not found. Did you import it yet? \nSearching Path : {OriginFileName} \n Do you mean : {MostFileFounder(filename=OriginFileName)}")
+                f"File ({filename}) not found. Did you import it yet? \nSearching Path : {OriginFileName} \n Do you mean : {MostFileFounder(filename=OriginFileName)}")
 
     # Save the Excel file
     @staticmethod
@@ -270,7 +272,7 @@ if __name__ == "__main__":
     Checking.CheckingTheModule(module_list=modules_to_install)
 
     # Replace the parameter with your "filename" (you may include the extension)
-    FILE_UNIVERSAL = FileAttribute.OpenTheFile("database101.csv")
+    FILE_UNIVERSAL = FileAttribute.OpenTheFile("REPLACE_WITH_YOUR_FILE_HERE")
 
     # Select the forth row of the csv file
     Row_selected_File_Universal = FILE_UNIVERSAL.iloc[[0]]

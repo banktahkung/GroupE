@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Excel File Management System</title>
+    <link rel="stylesheet" type="text/css" href="/css/mainmenu.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  </head>
+  <body>
+    <div class="HeaderContainer">
+      <div class="FileUploadButton">
+        <div class="OptionHeader">
+          <label for="fileInput" class="fileInput">
+            <div class="InputText">
+              <div class="PlusText">+</div>
+              <div class="AddText">Input File</div>
+            </div>
+          </label>
+          <div class="ProfileSelect">
+            <div class="profileSelect" onclick="DropdownContent()">
+              <div class="PlusText">-</div>
+              <div class="AddProfile">Select Profile</div>
+            </div>
+            <div class="ProfileDropdown" id="ProfileDropdown">
+              <div class="ProfileSelectButton first Select">
+                Default Profile
+              </div>
+              <div
+                class="ProfileSelectButton last Create"
+                onclick="OpenningAddingExcelProfile()"
+              >
+                + Create New Profile
+              </div>
+            </div>
+          </div>
+          <div class="FileDrawer">
+            <div class="fileDrawer" onclick="FileDropdownContent()">
+              File Inventory
+            </div>
+            <div class="fileDrawerDropdown" id="fileDrawerDropdown"></div>
+          </div>
+          <input
+            type="file"
+            id="fileInput"
+            style="display: none"
+            accept=".xlsx, .xls, .xlsm"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="ExcelFileShowcase">
+      <div class="ShowcaseFile">
+        <div class="FileInputMessage" id="FileInputMessage">
+          Please select a file
+        </div>
+        <div class="ShowcaseArea">
+          <div class="XAxisIndicator" id="XAxisIndicator"></div>
+          <div class="FileContentContainer">
+            <div class="YAxisIndicator" id="YAxisIndicator"></div>
+            <div class="FileContent" id="FileContent"></div>
+          </div>
+        </div>
+      </div>
+      <div class="IndicatorContainer">
+        <div class="CurrentProfileDeclaration">Default Profile</div>
+        <div class="ConvertArrowContainer">
+          <div
+            class="ConvertArrow Disabled"
+            id="ConvertArrow"
+            onclick="downloadExcel('Test.xlsx')"
+          >
+            ⮕
+          </div>
+        </div>
+      </div>
+      <div class="OutputFile">
+        <div class="FileOutputMessage" id="FileOutputMessage">
+          Result will be shown here
+        </div>
+        <div class="ShowcaseArea">
+          <div class="XAxisIndicator Output" id="XAxisIndicator"></div>
+          <div class="FileContentContainer">
+            <div class="YAxisIndicator Output" id="YAxisIndicator"></div>
+            <div class="FileContent Output" id="FileContent"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="AddingProfileWindow" id="AddingProfileWindow">
+      <div class="AddingProfileContainer">
+        <div class="AddingProfileContainerHeader">
+          <div
+            class="ClosingButtonContainer"
+            onclick="ClosingAddingExcelProfile()"
+          >
+            <div class="ClosingButton">X</div>
+          </div>
+
+          <div></div>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <script src="/js/mainmenu.js"></script>
+  </body>
+</html>

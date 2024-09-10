@@ -9,7 +9,7 @@ const nodemailer = require("nodemailer");
 // ! DONT FORGOT TO DELETE THE CODE WITH STATEMENT `console.log() IN PRODUCTION MODE`
 // ! NEVER SHARE THE `.env` FILE IN PUBLIC
 // % Port Use
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
 
 // - App
 const app = express();

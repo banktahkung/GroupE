@@ -6,29 +6,18 @@ This repository is designated for Group E, who are working on the E-TAX project 
 > The objective of the E-TAX project is to address and solve the company's problems by developing the most suitable solutions.
 
 
-> # Requirements
+> # Project Information
 >
-> 
-> To ensure the successful completion of this project, the following requirements must be met:
->
-> 
-> - Programming Language: Python
-> - Python Modules: The program will automatically download necessary modules such as pandas, os, etc.
-> - Resources: Sufficient disk space to save CSV files
+> - Programming Language: Javascript
+> - Framework uses: NodeJs
+> - Deployment : On the internet or local device (proceed with caution)
+> - Resources: Sufficient disk space to save the exported file
 
 
 > # Utilities
-> Here are the function that are implemented on the each file
+> Here are the function that are available on the system
 >
-> 
-> > Filename : "GetCSVFile.py"
-> > - Building the included environment (path)
-> > - Open the CSV file or XLSX file
-> > - Save the information to CSV file or XLSX file
-> > - Download the necessary module to use in the program 
->
->
-> > Filename : "main.py"
-> > - main script that include all the script exist in its environment
+> - File Conversion: Converts files into different formats based on the provided profile.
+> - Multiple Excel Handling: Capable of handling multiple Excel files to enhance system reliability.
 
-If you find any bug refer to our program, please may sure to "issue" that bug and explain the cause(s) and effect(s) of that bug.
+If you find any bug refer to our program, please make sure to "issue" that bug and explain the cause(s) and effect(s) of that bug.

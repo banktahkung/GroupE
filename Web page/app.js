@@ -18,7 +18,9 @@ const app = express();
 const env = dotenv.config().parsed;
 
 // - Establish connection between database and server
-const supabase = createClient(env.SUPABASE_URL, env.SUPABASE_KEY);
+// const supabase = createClient(env.SUPABASE_URL, env.SUPABASE_KEY);
+
+console.log(env);
 
 // - Header of the table
 const OutputTableHeader = [

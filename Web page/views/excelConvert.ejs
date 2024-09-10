@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>Excel File Management System</title>
-    <link rel="stylesheet" type="text/css" href="/css/mainmenu.css" />
+    <link rel="stylesheet" type="text/css" href="/css/excelconvert.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   </head>
   <body>
@@ -18,10 +18,13 @@
           <div class="ProfileSelect">
             <div class="profileSelect" onclick="DropdownContent()">
               <div class="PlusText">-</div>
-              <div class="AddProfile">Select Profile</div>
+              <div class="AddProfile" id="AddProfile">Select Profile</div>
             </div>
             <div class="ProfileDropdown" id="ProfileDropdown">
-              <div class="ProfileSelectButton first Select">
+              <div
+                class="ProfileSelectButton first Select"
+                onclick="SelectProfile(this)"
+              >
                 Default Profile
               </div>
               <div
@@ -36,7 +39,17 @@
             <div class="fileDrawer" onclick="FileDropdownContent()">
               File Inventory
             </div>
-            <div class="fileDrawerDropdown" id="fileDrawerDropdown"></div>
+            <div class="fileDrawerDropdown" id="fileDrawerDropdown">
+              <div
+                class="FileDropdown first"
+                style="border-radius: 20px; border-bottom: none"
+              >
+                No file
+              </div>
+            </div>
+          </div>
+          <div class="HelpButtonContainer">
+            <div class="HelpButton">?</div>
           </div>
           <input
             type="file"
@@ -49,25 +62,30 @@
     </div>
 
     <div class="ExcelFileShowcase">
-      <div class="ShowcaseFile">
+      <div class="ShowcaseFile" id="ShowcaseFile">
         <div class="FileInputMessage" id="FileInputMessage">
-          Please select a file
+          <div class="TextInputContainer">
+            <div class="topText">Please select a file</div>
+            <div class="bottomText">(or drop the file in this area)</div>
+          </div>
         </div>
         <div class="ShowcaseArea">
-          <div class="XAxisIndicator" id="XAxisIndicator"></div>
+          <div class="XAxisIndicator Input" id="XAxisIndicator"></div>
           <div class="FileContentContainer">
-            <div class="YAxisIndicator" id="YAxisIndicator"></div>
+            <div class="YAxisIndicator Input" id="YAxisIndicator"></div>
             <div class="FileContent" id="FileContent"></div>
           </div>
         </div>
       </div>
       <div class="IndicatorContainer">
-        <div class="CurrentProfileDeclaration">Default Profile</div>
+        <div class="CurrentProfileDeclaration" id="CurrentProfileDeclaration">
+          No Profile Selected
+        </div>
         <div class="ConvertArrowContainer">
           <div
             class="ConvertArrow Disabled"
             id="ConvertArrow"
-            onclick="downloadExcel('Test.xlsx')"
+            onclick="downloadExcel()"
           >
             ⮕
           </div>
@@ -101,7 +119,41 @@
         </div>
       </div>
     </div>
+
+    <div class="WarningWindow" id="WarningWindow">
+      <div class="WarningBlockContainer">
+        <div class="WarningBlock">
+          <div class="WarningMessage" id="WarningMessage"></div>
+          <div class="WarningClosingButtonContainer">
+            <div class="WarningClosingButton" onclick="ClosingWarningWindow()">
+              Close
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fileOutputWindow" id="fileOutputWindow">
+      <div class="fileOutputBlockContainer">
+        <div class="ExportBlock">
+          <div class="NameInputBlock">
+            <input
+              type="text"
+              placeholder="FileName"
+              name="filename"
+              id="filename"
+              required
+            />
+          </div>
+
+          <div class="SubmitButtonContainer">
+            <div class="SubmitButton"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="versionNumber">Beta 1.0.0</div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
-    <script src="/js/mainmenu.js"></script>
+    <script src="/js/excelconvert.js"></script>
   </body>
 </html>

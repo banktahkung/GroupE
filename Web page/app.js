@@ -128,9 +128,9 @@ let SetOfProfile = [];
 // ! Column and Row identification : {Col}{Row}
 // ! Seperate each data with the ; (semicolon)
 // ! Ex : C1;B2; => First Column : C1 | Second Column : B2
-// % Default profile state the belonged value column from original file, if "CV" mean using the ConditionalValue "NU" mean null value
+// % Default profile state the belonged value column from original file, if "CV" mean using the ConditionalValue, null'' mean null value
 let DefaultProfile = [
-  "O4", // A column
+  "CV", // A column
   "CV", // B column (ConditionalValue used)
   "P7", // C column
   "O8", // D column
@@ -166,8 +166,8 @@ let DefaultProfile = [
   "B7", // AH column
   null, // AI column
   "D8", // AJ column
-  "G8", // AK column (only numbers)
-  "U7", // AL column
+  "CV", // AK column
+  "V7", // AL column
   null, // AM to AR column (null for all)
   null,
   null,
@@ -176,7 +176,7 @@ let DefaultProfile = [
   null,
   "B9", // AS column
   "CV", // AT column
-  "U9", // AU column
+  "V9", // AU column
   "B11", // AV column
   null, // AW to BC column (null for all)
   null,
@@ -191,7 +191,7 @@ let DefaultProfile = [
   "P11", // BG column
   "R9", // BH column
   "E14", // BI column
-  "E71", // BJ column
+  "CV", // BJ column
   null,
   null, // BK column
   "A19", // BL column
@@ -216,8 +216,8 @@ let DefaultProfile = [
   null, // CF to CH column (null for all)
   null,
   null,
-  "path to something", // CI column
-  "path to something", // CJ column
+  "CV", // CI column
+  "CV", // CJ column
   null, // CK column
   "CV", // CL column (ConditionalValue used)
   "V12", // CM column
@@ -231,8 +231,15 @@ let DefaultProfile = [
 
 // % Conditional value is used for those column that doesn't belong to any value instead it checks whether the given column
 // % met the condition or not
-// % Identify by (key)Target Column : (value) {(key) Check column : ["(Condition) => (value)", ...]}
+// % Identify by {"(Target Column) column" : {(CONDITION/DEFAULT/OPERATION) : {condition from the key}, COUNT : {number}, IGNORE : {(CHECK COLUMN) : (CHECK VALUE)}}}
+// % CONDITION : {("(Checking Column) (OUTPUT table/INPUT table)" : {(condition) : (value), (condition) : (value) ,... })}
+// % DEFAULT : (default value)
+// % OPERATION : ["Data Column", "length", "(start/end)", "(value)"] - for substring
+// % OPERATION : ["Data Column", (Target Column/ Default value), "add" , "(Target Column/ Default value)"] - for joining string
+// % COUNT : dedicated the how many time this value will be print out. (optional)
+// % IGNORE : ignore the value of specific cell (optional)
 let ConditionalValue = {
+  "A column": { DEFAULT: "RECEIPT" },
   "B column": {
     CONDITION: {
       "A OUTPUT": {
@@ -243,6 +250,14 @@ let ConditionalValue = {
   },
   "CL column": {
     CONDITION: { "V12 INPUT": { null: "N", "not null": "Y" } },
+  },
+  "AK column": {
+    CONDITION: {
+      "G8 INPUT": {
+        "(Head Office)": "000000",
+        ELSE: "000001",
+      },
+    },
   },
   "E column": {
     DEFAULT: "VAT",
@@ -284,8 +299,9 @@ let ConditionalValue = {
   "AG column": {
     DEFAULT: "eTaxInvoice.noreply.th@ttsystems.com",
   },
+
   "AT column": {
-    OPERATION: ["B9", "length", "end", "5"],
+    OPERATION: ["B9", "length", "start", "-5"],
   },
   "BD column": {
     OPERATION: ["E15", "length", "start", "10"],
@@ -293,11 +309,20 @@ let ConditionalValue = {
   "BI column": {
     DEFAULT: "Bath",
   },
+  "BJ column": {
+    OPERATION: ["E71", "length", "from", "1", "-1"],
+  },
   "CD column": {
     DEFAULT: "VAT",
   },
   "CE column": {
     DEFAULT: 7,
+  },
+  "CI column": {
+    DEFAULT: "PATH TO SOMETHING",
+  },
+  "CJ column": {
+    DEFAULT: "PATH TO SOMETHING",
   },
   "CN column": {
     DEFAULT: "IT Solution",
@@ -352,14 +377,14 @@ app.get("/login", async (req, res) => {
 });
 
 // > Main menu Page
-app.get("/mainmenu", (req, res) => {
+app.get("/excelconvert", (req, res) => {
   // > Redirect to the `login` page, if the user is not login yet
   /*if (!req.session.user) {
     return res.redirect("/login");
   }*/
 
   // > Render the main menu page
-  res.render("mainmenu");
+  res.render("excelConvert");
 });
 
 // > Header of the result table
@@ -383,6 +408,7 @@ app.get("/profile", (req, res) => {
 app.post("/login", (req, res) => {
   const { gmail, password } = req.body;
 
+  // * Check whether the password is correct or not
   if (
     req.session.token.includes(password) ||
     password.includes(req.session.token)

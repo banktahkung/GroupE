@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
+
 /* - HTML Document style */
 html {
   font-family: "Poppins", sans-serif;
@@ -17,7 +18,7 @@ body {
 .HeaderContainer {
   height: 70px;
   width: 100%;
-  background-color: rgb(4, 197, 197);
+  background-color: #4caffb;
 }
 
 /* - The file upload part style */
@@ -45,7 +46,7 @@ body {
   display: flex;
   width: 200px;
   height: 50px;
-  background-color: rgb(80, 136, 124);
+  background-color: rgb(49, 134, 203);
   z-index: 2;
   border-radius: 30px;
   transition: all 0.3s ease-in-out;
@@ -61,7 +62,7 @@ body {
 .fileInput:hover,
 .profileSelect:hover,
 .fileDrawer:hover {
-  background-color: rgb(50, 86, 78);
+  background-color: rgb(15, 80, 134);
   transition: all 0.3s ease-in-out;
   cursor: pointer;
 }
@@ -111,18 +112,22 @@ body {
   background-color: rgb(197, 197, 197, 0.95);
   transition: background-color 0.3s ease-in-out;
   border-bottom: 0.5px solid #5c5c5c;
+  cursor: pointer;
 }
 
-.ProfileSelectButton:hover {
-  background-color: rgba(120, 120, 120, 0.95);
+.ProfileSelectButton:hover,
+.FileDropdown:hover {
+  background-color: rgba(165, 162, 162, 0.95);
   transition: background-color 0.3s ease-in-out;
 }
 
-.ProfileSelectButton.first {
+.ProfileSelectButton.first,
+.FileDropdown.first {
   border-radius: 20px 20px 0px 0px;
 }
 
-.ProfileSelectButton.last {
+.ProfileSelectButton.last,
+.FileDropdown.last {
   border-radius: 0px 0px 20px 20px;
   border: none;
 }
@@ -144,6 +149,36 @@ body {
 
 .PlusText {
   padding-right: 10px;
+}
+
+/* > Help button container */
+.HelpButtonContainer {
+  position: absolute;
+  right: 20px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.HelpButton {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  padding: 0px;
+  color: #fff;
+  border: 1px solid #fff;
+  border-radius: 50%;
+  background-color: rgb(49, 134, 203);
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.HelpButton:hover {
+  background-color: rgb(15, 80, 134);
 }
 
 /* - Excel File Showcase Attribute */
@@ -169,6 +204,18 @@ body {
   border: 2px #000 dashed;
   border-radius: 10px;
   overflow-x: auto;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.ShowcaseFile.dragover{
+  background-color: #9d9d9d;
+  transition: background-color 0.3s ease-in-out;
+}
+
+/* > Change the background color when drag and drop file */
+.FileDragAndDropContainer.dragover {
+  background-color: rgba(114, 114, 114, 0.4);
+  transition: background-color 0.3s ease-in-out;
 }
 
 /* > Indicator (between both input and output)*/
@@ -181,12 +228,15 @@ body {
 .CurrentProfileDeclaration {
   text-align: center;
   width: 100%;
+  font-size: 15px;
+  color: red;
 }
 
 /* > Convert Arrow key */
-.ConvertArrowContainer{
-  width:100%;
-  display:flex;
+.ConvertArrowContainer {
+  width: 100%;
+  height: 120px;
+  display: flex;
   align-items: center;
   justify-content: center;
 }
@@ -203,12 +253,31 @@ body {
 .ConvertArrow.Enable {
   color: rgb(117, 162, 162);
   cursor: pointer;
+  transition: color 0.3s ease-in-out;
+}
+
+.ConvertArrow.Enable:hover {
+  color: rgb(85, 121, 121);
+  transition: color 0.3s ease-in-out;
 }
 
 .FileInputMessage,
 .FileOutputMessage {
   width: 100%;
   height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.FileInputMessage {
+  position: relative;
+}
+
+/* > Input Text */
+.topText,
+.bottomText {
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -284,13 +353,12 @@ body {
   background-color: #fff;
   border-left: rgb(213, 213, 213) solid 1px;
   border-right: rgb(213, 213, 213) solid 1px;
-  border-bottom: rgb(230, 230, 230) solid 1px;
+  border-bottom: rgb(213, 213, 213) solid 1px;
   transition: background-color 0.3s ease-in-out;
   cursor: pointer;
 }
 
 .TableChild:hover {
-  background-color: rgb(239, 239, 239);
   transition: background-color 0.3s ease-in-out;
 }
 
@@ -346,4 +414,84 @@ body {
 
 .ClosingButton {
   transition: background-color 0.3s ease-in-out;
+}
+
+/* - Warning Window properties */
+/* % Warning Window Container */
+.WarningWindow,
+.fileOutputWindow {
+  position: absolute;
+  display: none;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 100;
+}
+
+.WarningBlockContainer,
+.fileOutputBlockContainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.WarningBlock {
+  width: 400px;
+  height: 300px;
+  background-color: #fff;
+  border-radius: 20px;
+  position: relative;
+}
+
+.WarningMessage {
+  width: 100%;
+  height: 60%;
+  font-size: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* % Warning Button */
+.WarningClosingButtonContainer {
+  width: 100%;
+  height: 40%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.WarningClosingButton {
+  background-color: rgb(187, 9, 9);
+  color: #fff;
+  width: 150px;
+  border-radius: 25px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* - Export window */
+.ExportBlock {
+  width: 600px;
+  height: 500px;
+  background-color: #fff;
+  border-radius: 20px;
+  position: relative;
+}
+
+/* - Version Number */
+.versionNumber {
+  position: absolute;
+  font-size: 10px;
+  color: #bdbdbd;
+  left: 5px;
+  bottom: 2px;
 }

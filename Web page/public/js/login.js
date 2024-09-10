@@ -25,7 +25,7 @@ EmailInput.addEventListener("change", () => {
 
       // >  Set timeout to return its initial state
       setTimeout(() => {
-        Button.style.backgroundColor = "#fff";
+        Button.style.backgroundColor = "#000";
       }, 200);
     });
   } else {
@@ -83,7 +83,7 @@ async function SendingLoginInformation(Email, password) {
   }else{
 
     if(response.status == 200){
-      window.location.href = "/mainmenu";
+      window.location.href = "/excelConvert";
     }
   }
 

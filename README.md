@@ -9,7 +9,7 @@ This repository is designated for Group E, who are working on the E-TAX project 
 > # Project Information
 >
 > - Programming Language: Javascript
-> - Framework uses: NodeJs
+> - Runtime uses:  NodeJs
 > - Deployment : On the internet or local device (proceed with caution)
 > - Resources: Sufficient disk space to save the exported file
 

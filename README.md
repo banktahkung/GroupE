@@ -1,5 +1,5 @@
 # GROUP E
-![image](https://github.com/user-attachments/assets/b12fc05e-8326-4c4a-bc70-82d38dfe304c)
+<img width="961" alt="image" src="https://github.com/user-attachments/assets/ba943cad-e03c-4177-b958-a29a2cd2dd32">
 
 This repository is designated for Group E, who are working on the E-TAX project assigned by PBL3. The software developed in this project will be freely available for use during the development phase. However, it will become unavailable after release due to company licensing restrictions. Therefore, during the release phase, we will not provide or push any code to this repository.
 

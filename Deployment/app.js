@@ -2,27 +2,10 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const session = require("express-session");
 
-<<<<<<< Updated upstream:Web page/app.js
-// ! DONT FORGOT TO DELETE THE CODE WITH STATEMENT `console.log() IN PRODUCTION MODE`
-// ! NEVER SHARE THE `.env` FILE IN PUBLIC
-// % Port Use
-const PORT = 4000;
-=======
 const PORT = process.env.PORT || 4500;
->>>>>>> Stashed changes:Deployment/app.js
 
 const app = express();
 
-<<<<<<< Updated upstream:Web page/app.js
-// - Get env content
-const env = dotenv.config().parsed;
-
-// - Establish connection between database and server
-const supabase = createClient(env.SUPABASE_URL, env.SUPABASE_KEY);
-
-// - Header of the table
-=======
->>>>>>> Stashed changes:Deployment/app.js
 const OutputTableHeader = [
   "DOCUMENT_NAME_Template",
   "DOCUMENT_TYPE",
@@ -349,4 +332,5 @@ app.get("/profile", (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Server is now  online`);
+  console.log(`Server is now listerning to the ${PORT}`);
 });

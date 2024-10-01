@@ -1,3 +1,4 @@
+// + Variable declaration
 let WarningCheck = false,
   DropdownState = false,
   fileDrawerdropdownState = false,

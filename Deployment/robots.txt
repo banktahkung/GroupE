@@ -1,0 +1,5 @@
+User-agent:*
+Disallow:/UnauthorizedAccess
+
+User-agent:*
+Disallow:/excelConvert
